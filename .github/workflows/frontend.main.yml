@@ -1,5 +1,5 @@
 name: deploy_frontend
-# Deploy when a push is made to the frontend folder
+
 on:
   push:
     branches: [ main ]
@@ -10,10 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/login@v1
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_PASS }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Upload to blob storage
       uses: azure/CLI@v1
@@ -25,7 +28,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          az cdn endpoint purge --content-paths "/*" --profile-name "yahavrazureresume" --name "https://azureresumeyahav.z6.web.core.windows.net" --resource-group "rg-resume"
+          az cdn endpoint purge --content-paths "/*" --profile-name "yahavrazureresume" --name "azureresumeyahav" --resource-group "rg-resume"
 
     - name: Logout from Azure
       run: az logout
