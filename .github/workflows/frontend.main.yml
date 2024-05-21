@@ -23,11 +23,13 @@ jobs:
       with:
         inlineScript: |
           az storage blob upload-batch --account-name azureresumeyahav --auth-mode key -d '$web' -s frontend/. --overwrite
+
     - name: Purge CDN endpoint
       uses: azure/CLI@v1
       with:
         inlineScript: |
           az cdn endpoint purge --content-paths "/*" --profile-name "yahavrazureresume" --name "azureresumeyahav" --resource-group "rg-resume"
+
     - name: Logout from Azure
       run: az logout
       if: always()
