@@ -27,9 +27,9 @@ This challenge is composed of 8 main parts:
 - Azure Functions Core Tools
 - Visual Studio Code
 - Visual Studio Code Extensions
-  - Azure Functions Extension
-  - C# Extension
-  - Azure Storage Extension
+- Azure Functions Extension
+- C# Extension
+- Azure Storage Extension
 - A cheap domain provider 
 
 ## Front-end
