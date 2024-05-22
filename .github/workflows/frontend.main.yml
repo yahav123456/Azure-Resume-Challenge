@@ -1,35 +1,35 @@
 name: deploy_frontend
 
 on:
-    push:
-        branches: [ main ]
-        paths:
-        - 'frontend/**'
+  push:
+    branches: [ main ]
+    paths:
+      - 'frontend/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/login@v1
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Upload to blob storage
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.0.72
         inlineScript: |
-            az storage blob upload-batch --account-name azureresumeyahav -d '$web' -s frontend/
+          az storage blob upload-batch --account-name azureresumeyahav --auth-mode key -d '$web' -s frontend/. --overwrite
+
     - name: Purge CDN endpoint
       uses: azure/CLI@v1
       with:
-        azclivertion: 2.0.72
         inlineScript: |
-           az cdn endpoint purge --content-paths  "/*" --profile-name "yahavrazureresume" --name "https://azureresumeyahav.z6.web.core.windows.net" --resource-group "rg-resume"
+          az cdn endpoint purge --content-paths "/*" --profile-name "yahavrazureresume" --name "azureresumeyahav" --resource-group "rg-resume"
 
-  # Azure logout
-    - name: logout
-      run: |
-            az logout
+    - name: Logout from Azure
+      run: az logout
       if: always()
